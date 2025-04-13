@@ -53,8 +53,8 @@ class BeneficiaryResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('project_id')
                     ->required()
-                    ->options(
-                        Project::all()->pluck('id')),
+                    ->relationship('project','name')
+                    ->searchable(),
                 Forms\Components\TextInput::make('created_by')                   
                     ->default(null),
                 Forms\Components\TextInput::make('updated_by')      
@@ -68,55 +68,37 @@ class BeneficiaryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('national_id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('h_national_id')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('fullname')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('h_fullname')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+            
+        
                 Tables\Columns\TextColumn::make('phonenumber')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('h_phonenumber')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+        
                 Tables\Columns\TextColumn::make('recipient_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('h_recipient_name')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+         
                 Tables\Columns\TextColumn::make('recipient_phone')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('h_recipient_phone')
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                     ->toggleable(isToggledHiddenByDefault: true),
+      
                 Tables\Columns\TextColumn::make('recipient_nid')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('h_recipient_nid')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
+  
                 Tables\Columns\TextColumn::make('transfer_value')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('h_transfer_value')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+          
                 Tables\Columns\TextColumn::make('transfer_count')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('h_transfer_count')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+             
                 Tables\Columns\TextColumn::make('recieve_date')
                     ->date()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('project_id')
-                    ->numeric()
+              
+                    Tables\Columns\TextColumn::make('project.name')
+                    ->label('Project Name')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_by')
@@ -144,7 +126,7 @@ class BeneficiaryResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
