@@ -10,7 +10,7 @@ enum Sectors: String {
     case Wash                = 'Wash';
     case Risk_Education      = 'Risk Educationt';
     case MPCA                = 'MPCA';
-
+    case ALL                 = 'All';
     public static function all()
     {
 

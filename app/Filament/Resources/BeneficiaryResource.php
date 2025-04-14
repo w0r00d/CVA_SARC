@@ -13,11 +13,13 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\Project;
+use App\Filament\Imports\BeneficiaryImporter;
+use Filament\Tables\Actions\ImportAction;
 class BeneficiaryResource extends Resource
 {
-    protected static ?string $model = Beneficiary::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $model           = Beneficiary::class;
+    protected static ?string $navigationGroup = 'Projects';
+    protected static ?string $navigationIcon  = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -65,6 +67,15 @@ class BeneficiaryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->headerActions([
+            ImportAction::make()
+                ->importer(BeneficiaryImporter::class)
+                ->options([
+                    'updateExisting' => false,
+                ]),
+
+        ])->striped()
+        ->heading('Beneficiaries')
             ->columns([
                 Tables\Columns\TextColumn::make('national_id')
                     ->searchable(),
@@ -117,7 +128,23 @@ class BeneficiaryResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->modifyQueryUsing(function (Builder $query) {
+                if(auth()->user()->governate == 'All' && auth()->user()->sector =='All'){
+                
+                  return  $query;
+                }
+                elseif (auth()->user()->governate != 'All' && auth()->user()->sector !='All') {
+                    return $query->whereRelation('project', 'governate',auth()->user()->governate)
+                        ->whereRelation('project','sector', auth()->user()->sector);
+
+                } elseif (auth()->user()->governate !=Governates::ALL) {
+                    return $query->whereRelation('project','governate' , auth()->user()->governate);
+
+                } elseif (auth()->user()->sector !=Sectors::ALL) {
+                    return $query->whereRelation('project','sector' , auth()->user()->sector);
+
+                } 
+            })
             ->filters([
                 //
             ])

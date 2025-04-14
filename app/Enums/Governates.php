@@ -3,6 +3,7 @@ namespace App\Enums;
 
 enum Governates: String {
     //
+   case ALL = 'All';
     case Damascus       = 'Damascus';
     case Aleppo         = 'Aleppo';
     case Homs           = 'Homs';
