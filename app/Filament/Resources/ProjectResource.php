@@ -108,12 +108,12 @@ class ProjectResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->visible(fn( $record): bool => auth()->user()->isAdmin()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                ])->visible(fn( $record): bool => auth()->user()->isAdmin()),
             ]);
     }
 
@@ -123,13 +123,19 @@ class ProjectResource extends Resource
             RelationManagers\BeneficiariesRelationManager::class,
         ];
     }
+    public static function canCreate(): bool
+    {
 
+        return auth()->user()->isAdmin();
+
+    }
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListProjects::route('/'),
             'create' => Pages\CreateProject::route('/create'),
             'edit' => Pages\EditProject::route('/{record}/edit'),
+            
         ];
     }
 }

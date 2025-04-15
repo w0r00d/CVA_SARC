@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\Project;
 use App\Filament\Imports\BeneficiaryImporter;
 use Filament\Tables\Actions\ImportAction;
+use App\Enums\Governates;
+use App\Enums\Sectors;
+
 class BeneficiaryResource extends Resource
 {
     protected static ?string $model           = Beneficiary::class;
@@ -79,55 +82,27 @@ class BeneficiaryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('national_id')
                     ->searchable(),
-            
-        
+                    
                 Tables\Columns\TextColumn::make('phonenumber')
                     ->searchable(),
         
                 Tables\Columns\TextColumn::make('recipient_name')
                     ->searchable(),
-         
-                Tables\Columns\TextColumn::make('recipient_phone')
-                    ->searchable()
-                     ->toggleable(isToggledHiddenByDefault: true),
-      
-                Tables\Columns\TextColumn::make('recipient_nid')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-  
+               
                 Tables\Columns\TextColumn::make('transfer_value')
                     ->numeric()
                     ->sortable(),
           
                 Tables\Columns\TextColumn::make('transfer_count')
-                    ->numeric()
-                    ->sortable(),
-             
-                Tables\Columns\TextColumn::make('recieve_date')
-                    ->date()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-              
-                    Tables\Columns\TextColumn::make('project.name')
+                    ->numeric(),                            
+                Tables\Columns\TextColumn::make('project.name')
                     ->label('Project Name')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_by')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_by')
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    Tables\Columns\TextColumn::make('project.governate')
+                    ->label('Governate'),
+     
+            
             ])->modifyQueryUsing(function (Builder $query) {
                 if(auth()->user()->governate == 'All' && auth()->user()->sector =='All'){
                 
@@ -149,12 +124,12 @@ class BeneficiaryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->visible(fn( $record): bool => auth()->user()->isAdmin()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                ])->visible(fn( $record): bool => auth()->user()->isAdmin()),
             ]);
     }
 
@@ -171,6 +146,7 @@ class BeneficiaryResource extends Resource
             'index' => Pages\ListBeneficiaries::route('/'),
             'create' => Pages\CreateBeneficiary::route('/create'),
             'edit' => Pages\EditBeneficiary::route('/{record}/edit'),
+            'view' => Pages\ViewBeneficiary::route('/{record}/view'),
         ];
     }
 }
