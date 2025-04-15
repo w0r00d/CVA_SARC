@@ -16,4 +16,11 @@ class EditBeneficiary extends EditRecord
           //  Actions\DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['updated_by'] = auth()->id();
+      //  dump( $data['fullname']);
+        return $data;
+    }
 }

@@ -17,7 +17,7 @@ use App\Filament\Imports\BeneficiaryImporter;
 use Filament\Tables\Actions\ImportAction;
 use App\Enums\Governates;
 use App\Enums\Sectors;
-
+use Filament\Forms\Components\Hidden;
 class BeneficiaryResource extends Resource
 {
     protected static ?string $model           = Beneficiary::class;
@@ -60,10 +60,9 @@ class BeneficiaryResource extends Resource
                     ->required()
                     ->relationship('project','name')
                     ->searchable(),
-                Forms\Components\TextInput::make('created_by')                   
-                    ->default(null),
-                Forms\Components\TextInput::make('updated_by')      
-                 ->default(null),
+                    Hidden::make('created_by')
+                    ->default(auth()->id()),
+                
             ]);
     }
 
@@ -125,6 +124,7 @@ class BeneficiaryResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->visible(fn( $record): bool => auth()->user()->isAdmin()),
+                Tables\Actions\ViewAction::make()->modal(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

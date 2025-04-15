@@ -23,7 +23,8 @@ class User extends Authenticatable
         'role',
         'governate',
         'sector',
-        'password'
+        'password',
+        
     ];
     public function role()
     {
@@ -58,6 +59,12 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function record(){
+
+        return $this->hasMany(Beneficiary::class);
+    }
+  
 
     /**
      * Get the attributes that should be cast.
