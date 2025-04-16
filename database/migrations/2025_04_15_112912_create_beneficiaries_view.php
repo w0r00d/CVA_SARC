@@ -21,12 +21,13 @@ return new class extends Migration
         b.recipient_name ,
         b.recipient_phone ,
         b.recipient_nid ,
-        
+        b.project_id,
         b.transfer_value ,
         b.transfer_count  ,
         b.recieve_date ,
          b.created_at,
         b.updated_at,
+        
         "ben"
         FROM beneficiaries b
         UNION ALL

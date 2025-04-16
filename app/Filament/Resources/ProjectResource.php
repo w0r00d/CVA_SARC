@@ -4,7 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
+use App\Filament\Exports\ProjectExporter;
+use Filament\Tables\Actions\ExportBulkAction;
 use App\Models\Project;
+use App\Filament\Imports\ProjectImporter;
+use Filament\Tables\Actions\ImportAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -57,6 +61,14 @@ class ProjectResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->headerActions([
+            ImportAction::make()
+                ->importer(ProjectImporter::class)
+                ->options([
+                    'updateExisting' => false,
+                ]),
+
+        ])->striped()
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -86,7 +98,7 @@ class ProjectResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->striped()
             ->modifyQueryUsing(function (Builder $query) {
                 if(auth()->user()->governate == 'All' && auth()->user()->sector =='All'){
                   return  $query;
@@ -111,9 +123,12 @@ class ProjectResource extends Resource
                 Tables\Actions\EditAction::make()->visible(fn( $record): bool => auth()->user()->isAdmin()),
             ])
             ->bulkActions([
+                ExportBulkAction::make()
+                ->exporter(ProjectExporter::class),
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ])->visible(fn( $record): bool => auth()->user()->isAdmin()),
+            
             ]);
     }
 

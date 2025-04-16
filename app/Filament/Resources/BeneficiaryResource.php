@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BeneficiaryResource\Pages;
 use App\Filament\Resources\BeneficiaryResource\RelationManagers;
 use App\Models\Beneficiary;
+use App\Filament\Exports\BeneficiaryResourceExporter;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -127,6 +129,8 @@ class BeneficiaryResource extends Resource
                 Tables\Actions\ViewAction::make()->modal(),
             ])
             ->bulkActions([
+                ExportBulkAction::make()
+                ->exporter(BeneficiaryResourceExporter::class),
                 Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),
                 ])->visible(fn( $record): bool => auth()->user()->isAdmin()),

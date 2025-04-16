@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('transfer_value');
           
             $table->integer('transfer_count');
-   
+            $table->integer('project_id');
             $table->date('recieve_date');
             
             $table->timestamps();
