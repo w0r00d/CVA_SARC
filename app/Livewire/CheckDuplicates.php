@@ -99,6 +99,8 @@ class CheckDuplicates extends Component implements HasForms, HasTable
                     }),
                 Tables\Columns\TextColumn::make('ben')
                     ->label('Beneficiary Type'),
+                    Tables\Columns\TextColumn::make('project')
+                    ->label('Project'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('created')->date(),
                 Tables\Columns\IconColumn::make('ben')

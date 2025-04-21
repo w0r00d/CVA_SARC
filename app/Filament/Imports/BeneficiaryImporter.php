@@ -3,6 +3,7 @@
 namespace App\Filament\Imports;
 
 use App\Models\Beneficiary;
+use App\Models\Project;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
@@ -57,8 +58,9 @@ class BeneficiaryImporter extends Importer
         return [
          Select::make('project_id2')
             ->required()
-            ->relationship('project','name')
-            ,
+            ->relationship('project','name',
+            modifyQueryUsing: fn (Builder $query) => $query->orderBy('id'))
+          
         ];
     
     

@@ -28,6 +28,11 @@ class BeneficiaryView extends Model
         $p = Beneficiary::where($this->id)->pluck('project_id');
 
     }
+    public function getProjectName(){
+        if($this->ben=='ben')
+        $p = Project::where($this->id)->pluck('name');
+
+    }
     public  function checkRecord() {
 
         if(BeneficiaryView::where('national_id', $this->national_id)->count()>1)
